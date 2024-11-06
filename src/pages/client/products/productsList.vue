@@ -29,7 +29,9 @@
           <v-img :src="item.image_url" height="64" cover></v-img>
         </v-card>
       </template>
-
+      <template v-slot:item.price="{ item }">
+        <div>{{ formatCurrency(item.price) }}</div>
+      </template>
       <template v-slot:item.stock="{ item }">
         <div class="text-end">
           <v-chip :color="item.stock > 0 ? 'green' : 'red'" :text="item.stock > 0 ? 'In stock' : 'Out of stock'"
@@ -37,8 +39,7 @@
         </div>
       </template>
       <template v-slot:item.actions="{ item }">
-
-        <VBtn variant="text" @click="addToCart(item.id)">
+        <VBtn variant="text" @click="openCartDialog(item)">
           <v-icon>ri-shopping-cart-2-line</v-icon>
         </VBtn>
         <VBtn variant="text" color="error" @click="openDeleteDialog(item)">
@@ -46,10 +47,17 @@
         </VBtn>
         <VBtn variant="text" @click="toEdit(item.id)">
           <v-icon>ri-arrow-right-s-line</v-icon>
+        
         </VBtn>
+        
       </template>
     </v-data-table>
   </v-card>
+  <CartDialog :show="cartDialog" 
+  @update:show="cartDialog = $event" 
+  @confirm="handleAddToCart" 
+  title="Confirm quantity of the product"
+  :message="'How many do you want?'"/>
   <DeleteDialog :show="deleteDialog" 
   @update:show="deleteDialog = $event" 
   @confirm="confirmDelete" 
@@ -61,16 +69,22 @@
 
 <script setup>
 import { useProductStore } from '@/stores/product-store';
+import { useCartStore } from '@/stores/cart-store';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { toast } from 'vue3-toastify';
+import { formatCurrency } from '@/utils/format';
 import DeleteDialog from '@/components/DeleteDialog.vue';
+import CartDialog from '@/components/CartDialog.vue';
 
+
+const cartStore = useCartStore()
 const productStore = useProductStore();
 const items = ref([]);
 const search = ref('');
 const deleteDialog = ref(false);
 const selectedItem = ref(null);
+const cartDialog = ref(false);
 const router = useRouter()
 const headers = ref([
   { title: 'Name', value: 'name' },
@@ -86,8 +100,10 @@ const openDeleteDialog = (item) => {
   deleteDialog.value = true;
 };
 
-
-
+const openCartDialog = (item) => {
+  selectedItem.value = item;
+  cartDialog.value = true;
+};
 onMounted(() => {
  loadProducts()
 });
@@ -112,8 +128,25 @@ const confirmDelete = async () => {
   }
 };
 
-const addToCart = () => {
-
+const handleAddToCart = (quantity) => {
+  if (selectedItem.value) {
+    const id = selectedItem.value.id
+    addToCart(id, quantity);
+  }
+};
+const addToCart = async (id, quantity) => {
+try {
+  const cartData = {
+    productId: id,
+    quantity
+  };
+  await cartStore.createCart(cartData)
+  toast.success("Producto agregado al carrito con exito")
+  setTimeout(() => {
+    }, 1500);
+} catch (error) {
+  console.log(error)
+}
 }
 
 const toEdit = (id) => {

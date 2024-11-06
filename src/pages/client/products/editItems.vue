@@ -17,7 +17,7 @@ onMounted(async() => {
   await loadCategory();
   await loadProduct();
 })
-const form = ref({
+const form = ref({  
   name: '',
  description: '',
  price: 0,

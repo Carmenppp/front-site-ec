@@ -87,6 +87,14 @@ const router = createRouter({
       },
       component: () => import('../pages/admin/brand/editItems.vue')
     },
+    {
+      path: '/cart',
+      name: 'cart',
+      meta: {
+        auth: true
+      },
+      component: () => import('../pages/client/cart/cartList.vue')
+    },
   ]
 })
 

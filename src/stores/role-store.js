@@ -3,13 +3,13 @@ import { api } from "../axios/axios.js"
 import { useUserStore } from './user-store.js'
 import { ref } from 'vue'
 
-export const useCategoryStore = defineStore("category", () => {
-    const categories = ref([]);
+export const useRoleStore = defineStore("role", () => {
+    const role = ref([]);
     const userStore = useUserStore()
     const createCategory = async (data) => {
         try {
             await api.post(
-                "/categories/",
+                "/role/",
                 {
                     description: data.description,
                 },
@@ -24,17 +24,17 @@ export const useCategoryStore = defineStore("category", () => {
         }
     }
 
-    const getCategory = async () => {
+    const getRole = async () => {
         try {
             const res = await api.get(
-                "/categories/",
+                "/role/",
                 {
                     headers: {
                         Authorization: 'Bearer ' + userStore.token
                     }
                 }
             );
-            categories.value = res.data.categories.map(item => item)
+            role.value = res.data.role.map(item => item)
         } catch (error) {
             console.log(error)
         }
@@ -43,14 +43,14 @@ export const useCategoryStore = defineStore("category", () => {
     const getCategById = async (id) =>{
         try {
            const res = await api.get(
-                `/categories/${id}`, 
+                `/role/${id}`, 
                 {
                     headers: {
                         Authorization: 'Bearer ' + userStore.token
                     }
                 } 
             );
-            categories.value = res.data.category
+            role.value = res.data.role
     } catch (error) {
         console.log(error)
     }
@@ -59,7 +59,7 @@ export const useCategoryStore = defineStore("category", () => {
     const editCategory = async (id, data) => {
         try {
             await api.patch(
-                `/categories/${id}`,
+                `/role/${id}`,
                 {
                     description: data.description,
                 },
@@ -77,7 +77,7 @@ export const useCategoryStore = defineStore("category", () => {
     const deleteCategory = async (id) => {
         try {
             await api.delete(
-                `/categories/${id}`,
+                `/role/${id}`,
                 {
                     headers: {
                         Authorization: 'Bearer ' + userStore.token
@@ -91,9 +91,9 @@ export const useCategoryStore = defineStore("category", () => {
 
     return {
         createCategory,
-        getCategory,
+        getRole,
         getCategById,
-        categories,
+        role,
         editCategory,
         deleteCategory
     }
