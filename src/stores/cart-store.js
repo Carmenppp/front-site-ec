@@ -7,13 +7,12 @@ export const useCartStore = defineStore("cart", () => {
     const cart = ref([]);
     const userStore = useUserStore()
     const createCart = async (data) => {
-        console.log(data)
         try {
             await api.post(
                 "/cart/",
                 {
                     productId: parseInt(data.productId, 10),
-                quantity: parseInt(data.quantity, 10),
+                    quantity: parseInt(data.quantity, 10),
                 },
                 {
                     headers: {
@@ -26,21 +25,20 @@ export const useCartStore = defineStore("cart", () => {
         }
     }
 
-    const getCartById = async () =>{
+    const getCartById = async () => {
         try {
-           const res = await api.get(
-                `/cart/`, 
+            const res = await api.get(
+                `/cart/`,
                 {
                     headers: {
                         Authorization: 'Bearer ' + userStore.token
                     }
-                } 
+                }
             );
-            console.log(res)
             cart.value = Array.isArray(res.data.cart) ? res.data.cart : [res.data.cart];
-    } catch (error) {
-        console.log(error)
-    }
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     const editCart = async (id, data) => {

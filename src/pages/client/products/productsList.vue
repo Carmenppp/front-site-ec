@@ -52,6 +52,12 @@
         
       </template>
     </v-data-table>
+    <v-chip prepend-icon="$vuetify" class="flex-1-0 ma-2 pa-2" variant="outlined">
+  Total de productos en stock: {{ totalProduct }}
+</v-chip>
+<v-chip prepend-icon="$vuetify" class="flex-1-0 ma-2 pa-2" variant="outlined">
+  Productos fuera de stock: {{ totalOutOfStock }}
+</v-chip>
   </v-card>
   <CartDialog :show="cartDialog" 
   @update:show="cartDialog = $event" 
@@ -80,6 +86,8 @@ import CartDialog from '@/components/CartDialog.vue';
 
 const cartStore = useCartStore()
 const productStore = useProductStore();
+const totalProduct = ref(0)
+const totalOutOfStock = ref(0)
 const items = ref([]);
 const search = ref('');
 const deleteDialog = ref(false);
@@ -105,8 +113,29 @@ const openCartDialog = (item) => {
   cartDialog.value = true;
 };
 onMounted(() => {
- loadProducts()
+ loadProducts(),
+ totalCalc()
 });
+
+const totalCalc = async () => {
+  await productStore.getProd();
+  const prodItems = productStore.products
+  let calc = 0
+  let outStock = 0
+  for (let i = 0; i < prodItems.length; i++) {
+    const stock = Number(prodItems[i].stock);
+
+    if(stock > 0){
+       calc = calc + 1
+    } else if (stock <= 0){
+      outStock=+ 1
+    }
+  }
+  totalProduct.value = calc;
+  totalOutOfStock.value = outStock;
+}
+
+
 const loadProducts = async() =>{
   try {
     await productStore.getProd();

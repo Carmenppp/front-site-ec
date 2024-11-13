@@ -31,11 +31,6 @@ const options = ref({
 
 const productForm = ref()
 
-async function validateForm() {
-  const { valid } = await productForm.value.validate()
-  return valid
-}
-
 const loadCategory = async () => {
   try {
     await categoryStore.getCategory();
@@ -55,7 +50,6 @@ const loadBrand = async () => {
 
 const createProd = async () => {
   try {
-    if (!(await validateForm())) return
     const productData = {
     name: name.value,
     description: description.value,
