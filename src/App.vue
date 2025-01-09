@@ -4,12 +4,13 @@ import { useUserStore } from './stores/user-store';
 
 const userStore = useUserStore()
 const items = [
-  { title: 'Products', route: "/products", condition: () => userStore.token },
+  { title: 'ProductsM', route: "/products", condition: () => userStore.token },
   { title: 'Categories', route: "/categories", condition: () => userStore.token },
   { title: 'Brands', route: "/brands", condition: () => userStore.token },
   { title: 'Cart', route: "/cart", condition: () => userStore.token },
   { title: 'Register', route: '/register', condition: () => !userStore.token },
   { title: 'Login', route: '/login', condition: () => !userStore.token },
+  { title: 'Products', route: '/products-card' },
 ]
 </script>
 

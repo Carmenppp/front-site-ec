@@ -40,6 +40,11 @@ const router = createRouter({
       component: () => import('../pages/client/products/editItems.vue')
     }, 
     {
+      path: '/products-card',
+      name: 'products card',
+      component: () => import('../pages/client/products/productsCards.vue')
+    }, 
+    {
       path: '/categories',
       name: 'categories',
       meta: {
@@ -103,7 +108,7 @@ router.beforeEach((to, from, next) => {
   const userStore = useUserStore();
   if (localStorage.getItem('token')) {
     if (requireAuth) {
-      //validar token
+
       if (userStore.token) {
         return next();
       }

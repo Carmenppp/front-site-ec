@@ -1,12 +1,17 @@
 <script setup>
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/user-store.js';
+import { rules } from '@/utils/rules';
 import { ref } from 'vue';
 
 const router = useRouter()
 const userStore = useUserStore();
+
 const email = ref('');
 const password = ref('');
+
+
+
 
 const login = () => {
   userStore.acces(email.value, password.value);
@@ -14,23 +19,30 @@ const login = () => {
 };
 
 </script>
+
+
+
 <template>
-  <div class="about">
-    <h1>Login</h1>
-    <form id="loginForm" @submit.prevent="login">
-      <input type="email" placeholder="email" v-model="email">
-      <input type="password" placeholder="password" v-model="password">
-      <button type="submit">Acceder</button>
-    </form>
-  </div>
+  <form  @submit.prevent="login">
+    <v-text-field
+      v-model="email"
+      label="Email"
+      :rules="[rules.required]"
+    ></v-text-field>
+
+    <v-text-field
+      v-model="password"
+      label="password"
+      :rules="[rules.required]"
+      type="password"
+    ></v-text-field>
+
+    
+    <v-btn
+      class="me-4"
+    >
+      Acceder
+    </v-btn>
+  </form>
 </template>
 
-<style>
-@media (min-width: 1024px) {
-  .about {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
-}
-</style>
